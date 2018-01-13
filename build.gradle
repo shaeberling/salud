@@ -1,0 +1,54 @@
+
+buildscript {
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'    // latest App Engine Gradle tasks
+  }
+}
+
+repositories {
+  maven {
+    url 'https://oss.sonatype.org/content/repositories/snapshots'
+  }
+  mavenCentral()
+  jcenter()
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'com.google.cloud.tools.appengine'
+
+def googleClientApiVersion = "1.22.0"
+
+dependencies {
+  compile 'com.google.appengine:appengine-api-1.0-sdk:+'
+  compile 'com.google.guava:guava:19.0'
+  providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+
+  compile 'jstl:jstl:1.2'
+
+  // For Google Sheets API access.
+  compile "com.google.api-client:google-api-client-appengine:${googleClientApiVersion}"
+  compile "com.google.api-client:google-api-client:${googleClientApiVersion}"
+  compile "com.google.api-client:google-api-client-gson:${googleClientApiVersion}"
+  compile "com.google.oauth-client:google-oauth-client-jetty:${googleClientApiVersion}"
+  compile "com.google.apis:google-api-services-sheets:v4-rev461-${googleClientApiVersion}"
+
+// Add your dependencies here.
+//  compile 'com.google.cloud:google-cloud:+'   // Latest Cloud API's http://googlecloudplatform.github.io/google-cloud-java
+}
+
+appengine {  // App Engine tasks configuration
+  deploy {   // deploy configuration
+  }
+}
+
+group   = "com.s13g.salud"
+version = "0.1"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
