@@ -17,12 +17,12 @@
 package com.s13g.salud;
 
 import com.google.common.base.Strings;
+import com.s13g.salud.data.RegisteringServlet;
 import com.s13g.salud.ui.JspUtil;
 import com.s13g.salud.ui.TemplateModel;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 import static com.s13g.salud.EntryType.*;
 
 @WebServlet(name = "SubmitValueServlet", value = "/submit")
-public class SubmitValueServlet extends HttpServlet {
+public class SubmitValueServlet extends RegisteringServlet {
   private static final Logger LOG = Logger.getLogger("SubmitValue");
 
   private static final String PARAM_CARDIO_CALORIES = "cardio_calories";
@@ -61,13 +61,16 @@ public class SubmitValueServlet extends HttpServlet {
         message.append(handleSubmission(entry, Integer.parseInt(valueStr)));
       } catch (NumberFormatException ex) {
         message.append(String.format(MSG_FAILURE, "Cannot parse number " + valueStr));
+      } catch (InstantiationException e) {
+        message.append(String.format(MSG_FAILURE, e.getMessage()));
       }
     }
     model.put("message", message.toString());
     JspUtil.writeResponse(getServletContext(), req, resp, "/submit.jsp", model);
   }
 
-  private String handleSubmission(ExerciseEntry entry, int value) throws IOException {
+  private String handleSubmission(ExerciseEntry entry, int value) throws IOException,
+      InstantiationException {
     StringBuilder message = new StringBuilder();
     SheetController sheetController = SheetControllerCreator.create();
     if (!sheetController.addEntry(entry.type, value)) {

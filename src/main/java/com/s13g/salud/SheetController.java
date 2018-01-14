@@ -29,21 +29,21 @@ import java.util.*;
  */
 public class SheetController {
   private static final String RANGE = "Data Entry!A:E";
-  // FIXME: Put this in properties file or datastore.
-  private static final String SPREADSHEET_ID = "";
 
   private static final Map<EntryType, Integer> ASSIGNMENTS = getAssignments();
 
+  private final String sheetId;
   final Sheets sheets;
 
-  SheetController(Sheets sheets) {
+  SheetController(String sheetId, Sheets sheets) {
+    this.sheetId = sheetId;
     this.sheets = sheets;
   }
 
   public boolean addEntry(EntryType type, int value) throws IOException {
     ValueRange values = valuesFromRequest(type, value);
     AppendValuesResponse response = sheets.spreadsheets().values()
-        .append(SPREADSHEET_ID, RANGE, values)
+        .append(sheetId, RANGE, values)
         .setValueInputOption("USER_ENTERED")
         .setInsertDataOption("INSERT_ROWS")
         .execute();
